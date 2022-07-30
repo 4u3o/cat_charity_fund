@@ -4,11 +4,8 @@ from pydantic import BaseSettings, EmailStr
 
 
 class Settings(BaseSettings):
-    app_title: str = 'QRKot'
-    description: str = (
-        'Благотворительный фонд поддержки котиков QRKot '
-        'собирает пожертвования на различные целевые проекты.'
-    )
+    app_title: str = 'Кошачий благотворительный фонд (0.1.0)'
+    description: str = 'Сервис для поддержки котиков!'
     database_url: str = 'sqlite+aiosqlite:///./fastapi.db'
     authentication_backend: str = 'jwt'
     secret: str = 'SECRET'

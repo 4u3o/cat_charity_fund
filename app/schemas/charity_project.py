@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from pydantic import (
-    BaseModel, Extra, Field, PositiveInt
+    BaseModel, Extra, Field, PositiveInt, constr
 )
 
 
@@ -13,15 +13,15 @@ class CharityProjectBase(BaseModel):
 
 
 class CharityProjectCreate(CharityProjectBase):
-    name: str = Field(..., max_length=100)
+    name: constr(max_length=100)
     description: str
-    full_amount: PositiveInt
+    full_amount: PositiveInt = Field(..., example=100)
 
 
 class CharityProjectUpdate(CharityProjectBase):
-    name: Optional[str] = Field(..., max_length=100)
+    name: Optional[constr(max_length=100)]
     description: Optional[str]
-    full_amount: Optional[PositiveInt]
+    full_amount: Optional[PositiveInt] = Field(..., example=100)
 
 
 class CharityProjectDB(CharityProjectCreate):
