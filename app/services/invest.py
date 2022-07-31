@@ -17,23 +17,17 @@ def close_obj(obj: Union[Donation, CharityProject]) -> None:
 
 async def start_invest(
     session: AsyncSession,
-):
-    """Инвестирует свободные донаты в открытые проекты.
-
-    Args:
-        session: AsyncSession.
-
-    Returns:
-        None.
-
-    """
+) -> None:
+    """Инвестирует свободные донаты в открытые проекты."""
     projects = await charity_project_crud.get_multi_with_free_amount(session)
     donations = await donation_crud.get_multi_with_free_amount(session)
 
-    project_index, projects_max_index = 0, len(projects) - 1
-    donation_index, donations_max_index = 0, len(donations) - 1
+    project_index, projects_len = 0, len(projects)
+    donation_index, donations_len = 0, len(donations)
 
-    while not projects[project_index].fully_invested:
+    changed_objs = set()
+
+    while donation_index < donations_len and project_index < projects_len:
         project = projects[project_index]
         donation = donations[donation_index]
 
@@ -47,10 +41,9 @@ async def start_invest(
             close_obj(project)
             close_obj(donation)
 
-            if project_index < projects_max_index:
-                project_index += 1
+            project_index += 1
 
-            if donation_index < donations_max_index:
+            if donation.fully_invested:
                 donation_index += 1
 
         else:
@@ -59,11 +52,9 @@ async def start_invest(
 
             close_obj(donation)
 
-            if donation_index < donations_max_index:
-                donation_index += 1
+            donation_index += 1
 
-    changed_objs = projects[:project_index + 1].extend(
-        donations[:donation_index + 1]
-    )
-    await session.add_all(changed_objs)
+        changed_objs.update({project, donation})
+
+    session.add_all(changed_objs)
     await session.commit()

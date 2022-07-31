@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import (
-    check_full_amount_gt_invested, check_project_not_closed,
-    check_project_not_invested
+    check_charity_project_name_duplicate, check_full_amount_gt_invested,
+    check_project_not_closed, check_project_not_invested
 )
 from app.core.db import get_async_session
 from app.core.user import current_superuser
@@ -23,6 +23,7 @@ router = APIRouter()
 @router.get(
     '/',
     response_model=List[CharityProjectDB],
+    response_model_exclude_none=True,
 )
 async def get_all_charity_project(
     session: AsyncSession = Depends(get_async_session)
@@ -36,6 +37,7 @@ async def get_all_charity_project(
     '/',
     response_model=CharityProjectDB,
     dependencies=[Depends(current_superuser)],
+    response_model_exclude_none=True,
 )
 async def create_charity_project(
     charity_project: CharityProjectCreate,
@@ -46,6 +48,8 @@ async def create_charity_project(
 
     Создает благотворительный проект.
     """
+    await check_charity_project_name_duplicate(charity_project.name, session)
+
     charity_project = await charity_project_crud.create(
         charity_project, session
     )
@@ -93,9 +97,13 @@ async def update_charity_project(
     также нельзя установить требуемую сумму меньше уже вложенной.
     """
     project = await check_project_not_closed(project_id, session)
-    await check_full_amount_gt_invested(project, obj_in.dict()['full_amount'])
+    await check_charity_project_name_duplicate(
+        obj_in.name, session
+    )
+    await check_full_amount_gt_invested(project, obj_in)
 
     project = await charity_project_crud.update(
         session, project, obj_in
     )
+
     return project

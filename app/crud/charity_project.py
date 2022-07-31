@@ -21,10 +21,21 @@ class CRUDCharityProject(
     async def get(
         self,
         project_id: int,
-        session: AsyncSession
+        session: AsyncSession,
     ) -> Optional[CharityProject]:
         project_result = await session.execute(
             select(CharityProject).where(CharityProject.id == project_id)
+        )
+
+        return project_result.scalars().first()
+
+    async def get_by_name(
+        self,
+        project_name: str,
+        session: AsyncSession,
+    ) -> Optional[CharityProject]:
+        project_result = await session.execute(
+            select(CharityProject).where(CharityProject.name == project_name)
         )
 
         return project_result.scalars().first()

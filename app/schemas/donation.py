@@ -1,6 +1,5 @@
 from datetime import datetime
 from typing import Optional
-# from uuid import UUID
 
 from pydantic import (
     BaseModel, Extra, PositiveInt
@@ -28,9 +27,12 @@ class DonationDBShort(DonationBase):
     create_date: datetime
 
 
+    class Config:
+        orm_mode = True
+
+
 class DonationDBFull(DonationDBShort):
-    # убрал UUID чтобы пример был как в доке
-    user_id: str
+    user_id: int
     invested_amount: int
     fully_invested: bool
     close_date: Optional[datetime]
