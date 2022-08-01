@@ -133,3 +133,4 @@ dmypy.json
 
 /fastapi.db
 /test.db
+/qrkot.db
