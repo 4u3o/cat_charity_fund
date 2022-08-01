@@ -31,6 +31,5 @@ class CharityProjectDB(CharityProjectCreate):
     create_date: datetime
     close_date: Optional[datetime]
 
-
     class Config:
         orm_mode = True

@@ -13,7 +13,6 @@ class Settings(BaseSettings):
     first_superuser_email: Optional[EmailStr] = None
     first_superuser_password: Optional[str] = None
 
-
     class Config:
         env_file = '.env'
 

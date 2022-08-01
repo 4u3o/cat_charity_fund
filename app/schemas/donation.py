@@ -26,7 +26,6 @@ class DonationDBShort(DonationBase):
     id: int
     create_date: datetime
 
-
     class Config:
         orm_mode = True
 
