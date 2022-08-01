@@ -1,7 +1,9 @@
 # Кошачий благотворительный фонд
 
-*Учебный проект по FastAPI. 
-Python 3.7.9*
+---
+
+*Учебный проект по FastAPI.  
+Python 3.7.9, FastAPI 0.78.0*
 
 1. [Описание](#description)
 2. [Настройка](#settings)
@@ -33,7 +35,7 @@ Python 3.7.9*
 
 ### Пример переменных окружения <a id="env"></a>
 
-    DATABASE_URL=sqlite+aiosqlite:///./fastapi.db
+    DATABASE_URL=sqlite+aiosqlite:///./qrkot.db
     SECRET=SECRET
 
 ## Документация <a id="docs"></a>
